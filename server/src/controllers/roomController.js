@@ -342,3 +342,44 @@ exports.deleteRoom = async (req, res) => {
     });
   }
 }; 
+
+exports.leaveRoom = async (req, res) => {
+  try {
+    const { roomId } = req.params;
+    const userId = req.userId;
+
+    // Tìm phòng
+    const room = await Room.findById(roomId);
+    if (!room) {
+      return res.status(404).json({ error: 'Room not found' });
+    }
+
+    // Kiểm tra xem user có trong phòng không
+    if (!room.members.includes(userId)) {
+      return res.status(400).json({ error: 'You are not a member of this room' });
+    }
+
+    // Gỡ user khỏi danh sách thành viên
+    room.members = room.members.filter(memberId => memberId.toString() !== userId);
+    await room.save();
+
+    // Gỡ room khỏi joinedRooms của user
+    await User.findByIdAndUpdate(
+      userId,
+      { $pull: { joinedRooms: roomId } }
+    );
+
+    // Gửi socket thông báo user đã rời phòng
+    if (req.io) {
+      req.io.to(roomId).emit('user_left', {
+        roomId,
+        userId
+      });
+    }
+
+    res.json({ message: 'You have left the room successfully.' });
+  } catch (err) {
+    console.error('Error leaving room:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+};

@@ -2,7 +2,25 @@ import React, { useState } from 'react';
 import { Popover } from 'antd';
 import { SmileOutlined } from '@ant-design/icons';
 
-const REACTIONS = ['👍', '❤️', '😂', '😮', '😢', '👏', '🙌', '🎉'];
+const REACTIONS = [
+  // Positive
+  '👍', '👎', '❤️', '🔥', '💯', '🎉', '🥳', '👏', '🙌', '🤩', '😎', '😊', '😇', '✨',
+
+  // Funny & playful
+  '😂', '🤣', '😹', '😜', '🤪', '😛', '💩', '🫠',
+
+  // Emotional
+  '😢', '😭', '😡', '🤬', '😮', '😱', '😳', '😰', '😔', '😞', '🤯',
+
+  // Neutral / thoughtful
+  '🤔', '😐', '😶', '😴', '😌', '😕',
+
+  // Hand gestures & actions
+  '🤝', '🙏', '✌️', '👌', '👀', '🫶', '🫵', '✋', '👋',
+
+  // Cool / special effects
+  '🌟', '⚡️', '💥', '🌈', '🌊', '🎶', '🎈', '🎁' 
+];
 
 interface ReactionPickerProps {
   onSelect: (reaction: string) => void;

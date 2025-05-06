@@ -65,4 +65,17 @@ router.delete(
   roomController.deleteRoom
 );
 
+// @route   POST /api/rooms/:roomId/leave
+// @desc    Leave a room
+// @access  Private
+router.post(
+  '/:roomId([0-9a-fA-F]{24})/leave',
+  [
+    check('roomId', 'Room ID is required').notEmpty(),
+    check('roomId', 'Invalid room ID').isMongoId()
+  ],
+  roomController.leaveRoom
+);
+
+
 module.exports = router; 

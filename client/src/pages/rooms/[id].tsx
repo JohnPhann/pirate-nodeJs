@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Typography, Result, Button, List, Avatar, message, Modal, Tabs, Space, Input, Spin } from 'antd';
-import { UserOutlined, DeleteOutlined, SettingOutlined, PlusOutlined, SearchOutlined, ExclamationCircleOutlined, CrownOutlined } from '@ant-design/icons';
+import { UserOutlined, DeleteOutlined, SettingOutlined, PlusOutlined, SearchOutlined, ExclamationCircleOutlined, CrownOutlined, LogoutOutlined } from '@ant-design/icons';
 import ChatWindow from '../../components/ChatWindow';
 import { AuthContext } from '../../context/AuthContext';
 import api from '../../utils/api';
@@ -10,6 +10,7 @@ import { handleError } from '../../utils/errorHandler';
 import { showSuccess, showError, showWarning, showInfo } from '../../utils/messageHandler';
 import type { Socket } from 'socket.io-client';
 import { Reaction } from '../../types';
+import axios from 'axios';
 
 const { Title, Text } = Typography;
 const { TabPane } = Tabs;
@@ -72,6 +73,7 @@ const RoomPage: React.FC = () => {
   const [typingUsers, setTypingUsers] = useState<{ userId: string; username: string; timestamp: number }[]>([]);
   const [roomJoined, setRoomJoined] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
+  const [leaving, setLeaving] = useState(false);
 
   // Validate MongoDB ID format
   const isValidMongoId = (id: string) => {
@@ -521,6 +523,32 @@ const RoomPage: React.FC = () => {
     }
   };
 
+  const leaveRoom = async () => {
+    try {
+      if(!room?._id){
+        showError({ 
+          content: `Room not found`,
+          duration: 2,
+        });
+        return;
+      }
+      setLeaving(true);
+      await api.post(`/rooms/${room._id}/leave`);
+      showSuccess({ 
+        content: `You have left the room`,
+        duration: 2,
+      });
+      router.push('/'); // Redirect user to room list
+    } catch (error) {
+      showError({ 
+        content: `Failed to leave room`,
+        duration: 2,
+      });
+    } finally {
+      setLeaving(false);
+    }
+  };
+
   if (loading || loadingRoom) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -812,6 +840,18 @@ const RoomPage: React.FC = () => {
             </TabPane>
           )}
         </Tabs>
+        {room?.isGroup && (
+        <Button
+          danger
+          type="text"
+          icon={<LogoutOutlined />}
+          onClick={leaveRoom}
+          loading={leaving}
+          className="text-red-500 hover:text-red-600 hover:bg-red-50 rounded-lg"
+        >
+          Leave Room
+        </Button>
+      )}
       </Modal>
     </div>
   );
