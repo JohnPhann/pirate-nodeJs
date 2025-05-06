@@ -4,22 +4,7 @@ import { SmileOutlined } from '@ant-design/icons';
 
 const REACTIONS = [
   // Positive
-  '👍', '👎', '❤️', '🔥', '💯', '🎉', '🥳', '👏', '🙌', '🤩', '😎', '😊', '😇', '✨',
-
-  // Funny & playful
-  '😂', '🤣', '😹', '😜', '🤪', '😛', '💩', '🫠',
-
-  // Emotional
-  '😢', '😭', '😡', '🤬', '😮', '😱', '😳', '😰', '😔', '😞', '🤯',
-
-  // Neutral / thoughtful
-  '🤔', '😐', '😶', '😴', '😌', '😕',
-
-  // Hand gestures & actions
-  '🤝', '🙏', '✌️', '👌', '👀', '🫶', '🫵', '✋', '👋',
-
-  // Cool / special effects
-  '🌟', '⚡️', '💥', '🌈', '🌊', '🎶', '🎈', '🎁' 
+  '👍', '👎', '❤️', '🔥', '💯', '🎉', '🥳','😊', '😇', '✨',
 ];
 
 interface ReactionPickerProps {
